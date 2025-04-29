@@ -1,0 +1,22 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: UseNode@1
+  inputs:
+    version: '14.x'
+
+- script: |
+    npm install
+    npm test
+    npm run build
+  displayName: 'Build and Test'
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: '<your-service-connection>'
+    appName: '<your-app-name>'
+    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
